@@ -1,0 +1,378 @@
+n = 5
+x^7: 3720 violations
+  155 vertices each violate for 48 neighbours
+
+x^11: 3720 violations
+  155 vertices each violate for 48 neighbours
+
+
+n = 6
+x^7: 45234 violations
+  63 vertices each violate for 96 neighbours
+  189 vertices each violate for 142 neighbours
+  378 vertices each violate for 144 neighbours
+  21 vertices each violate for 150 neighbours
+
+
+n = 7
+x^7: 448056 violations
+  2667 vertices each violate for 336 neighbours
+
+x^19: 448056 violations
+  2667 vertices each violate for 336 neighbours
+
+x^21: 448056 violations
+  2667 vertices each violate for 336 neighbours
+
+
+n = 8
+x^7: 3855600 violations
+  1020 vertices each violate for 672 neighbours
+  1530 vertices each violate for 696 neighbours
+  2040 vertices each violate for 708 neighbours
+  2125 vertices each violate for 720 neighbours
+  4080 vertices each violate for 732 neighbours
+
+x^37: 3855600 violations
+  1020 vertices each violate for 672 neighbours
+  1530 vertices each violate for 696 neighbours
+  2040 vertices each violate for 708 neighbours
+  2125 vertices each violate for 720 neighbours
+  4080 vertices each violate for 732 neighbours
+
+x^19 + α^1·x^104: 3847610 violations
+  85 vertices each violate for 666 neighbours
+  85 vertices each violate for 682 neighbours
+  425 vertices each violate for 684 neighbours
+  85 vertices each violate for 688 neighbours
+  935 vertices each violate for 694 neighbours
+  765 vertices each violate for 696 neighbours
+  170 vertices each violate for 700 neighbours
+  425 vertices each violate for 704 neighbours
+  1360 vertices each violate for 706 neighbours
+  765 vertices each violate for 708 neighbours
+  255 vertices each violate for 714 neighbours
+  510 vertices each violate for 716 neighbours
+  1190 vertices each violate for 718 neighbours
+  1020 vertices each violate for 720 neighbours
+  340 vertices each violate for 728 neighbours
+  1020 vertices each violate for 730 neighbours
+  850 vertices each violate for 732 neighbours
+  340 vertices each violate for 742 neighbours
+  85 vertices each violate for 744 neighbours
+  85 vertices each violate for 756 neighbours
+
+
+n = 9
+x^7: 32257386 violations
+  4599 vertices each violate for 1404 neighbours
+  4599 vertices each violate for 1432 neighbours
+  9198 vertices each violate for 1460 neighbours
+  4599 vertices each violate for 1488 neighbours
+  511 vertices each violate for 1512 neighbours
+  18396 vertices each violate for 1516 neighbours
+  1533 vertices each violate for 1656 neighbours
+
+x^21: 32257386 violations
+  13797 vertices each violate for 1432 neighbours
+  4599 vertices each violate for 1460 neighbours
+  10731 vertices each violate for 1488 neighbours
+  511 vertices each violate for 1512 neighbours
+  9198 vertices each violate for 1516 neighbours
+  4599 vertices each violate for 1600 neighbours
+
+x^35: 32257386 violations
+  1533 vertices each violate for 1404 neighbours
+  9198 vertices each violate for 1432 neighbours
+  9198 vertices each violate for 1460 neighbours
+  9198 vertices each violate for 1488 neighbours
+  511 vertices each violate for 1512 neighbours
+  9198 vertices each violate for 1516 neighbours
+  4599 vertices each violate for 1600 neighbours
+
+
+n = 10
+x^7: 262951920 violations
+  5115 vertices each violate for 2952 neighbours
+  10230 vertices each violate for 2964 neighbours
+  5115 vertices each violate for 2988 neighbours
+  10230 vertices each violate for 3000 neighbours
+  51150 vertices each violate for 3012 neighbours
+  40920 vertices each violate for 3024 neighbours
+  25575 vertices each violate for 3036 neighbours
+  20460 vertices each violate for 3048 neighbours
+  5456 vertices each violate for 3060 neighbours
+
+x^73: 262951920 violations
+  5115 vertices each violate for 2952 neighbours
+  10230 vertices each violate for 2964 neighbours
+  5115 vertices each violate for 2988 neighbours
+  10230 vertices each violate for 3000 neighbours
+  51150 vertices each violate for 3012 neighbours
+  40920 vertices each violate for 3024 neighbours
+  25575 vertices each violate for 3036 neighbours
+  20460 vertices each violate for 3048 neighbours
+  5456 vertices each violate for 3060 neighbours
+
+x^7 + α^31·x^100: 262790720 violations
+  930 vertices each violate for 2972 neighbours
+  1395 vertices each violate for 2974 neighbours
+  1395 vertices each violate for 2976 neighbours
+  465 vertices each violate for 2980 neighbours
+  1395 vertices each violate for 2982 neighbours
+  930 vertices each violate for 2984 neighbours
+  5425 vertices each violate for 2986 neighbours
+  7905 vertices each violate for 2988 neighbours
+  1395 vertices each violate for 2992 neighbours
+  465 vertices each violate for 2994 neighbours
+  3255 vertices each violate for 2996 neighbours
+  6975 vertices each violate for 2998 neighbours
+  9765 vertices each violate for 3000 neighbours
+  1395 vertices each violate for 3004 neighbours
+  1860 vertices each violate for 3006 neighbours
+  5580 vertices each violate for 3008 neighbours
+  14880 vertices each violate for 3010 neighbours
+  23250 vertices each violate for 3012 neighbours
+  465 vertices each violate for 3014 neighbours
+  930 vertices each violate for 3016 neighbours
+  4185 vertices each violate for 3018 neighbours
+  6975 vertices each violate for 3020 neighbours
+  15345 vertices each violate for 3022 neighbours
+  13020 vertices each violate for 3024 neighbours
+  465 vertices each violate for 3026 neighbours
+  465 vertices each violate for 3028 neighbours
+  930 vertices each violate for 3030 neighbours
+  2325 vertices each violate for 3032 neighbours
+  8835 vertices each violate for 3034 neighbours
+  11160 vertices each violate for 3036 neighbours
+  2325 vertices each violate for 3042 neighbours
+  3720 vertices each violate for 3044 neighbours
+  3720 vertices each violate for 3046 neighbours
+  7905 vertices each violate for 3048 neighbours
+  465 vertices each violate for 3058 neighbours
+  2356 vertices each violate for 3060 neighbours
+
+x^7 + α^31·x^193: 262782660 violations
+  155 vertices each violate for 2940 neighbours
+  465 vertices each violate for 2960 neighbours
+  3255 vertices each violate for 2974 neighbours
+  930 vertices each violate for 2976 neighbours
+  465 vertices each violate for 2980 neighbours
+  465 vertices each violate for 2984 neighbours
+  4650 vertices each violate for 2986 neighbours
+  6975 vertices each violate for 2988 neighbours
+  465 vertices each violate for 2992 neighbours
+  3255 vertices each violate for 2994 neighbours
+  5115 vertices each violate for 2996 neighbours
+  6510 vertices each violate for 2998 neighbours
+  13485 vertices each violate for 3000 neighbours
+  1395 vertices each violate for 3004 neighbours
+  1860 vertices each violate for 3006 neighbours
+  6975 vertices each violate for 3008 neighbours
+  16275 vertices each violate for 3010 neighbours
+  11160 vertices each violate for 3012 neighbours
+  1860 vertices each violate for 3016 neighbours
+  2790 vertices each violate for 3018 neighbours
+  6045 vertices each violate for 3020 neighbours
+  18135 vertices each violate for 3022 neighbours
+  17360 vertices each violate for 3024 neighbours
+  465 vertices each violate for 3028 neighbours
+  465 vertices each violate for 3030 neighbours
+  3720 vertices each violate for 3032 neighbours
+  10695 vertices each violate for 3034 neighbours
+  11160 vertices each violate for 3036 neighbours
+  930 vertices each violate for 3042 neighbours
+  2325 vertices each violate for 3044 neighbours
+  5115 vertices each violate for 3046 neighbours
+  5115 vertices each violate for 3048 neighbours
+  1395 vertices each violate for 3058 neighbours
+  2821 vertices each violate for 3060 neighbours
+
+x^73 + α^31·x^352: 262782350 violations
+  155 vertices each violate for 2950 neighbours
+  465 vertices each violate for 2958 neighbours
+  465 vertices each violate for 2962 neighbours
+  465 vertices each violate for 2970 neighbours
+  1395 vertices each violate for 2974 neighbours
+  1860 vertices each violate for 2976 neighbours
+  930 vertices each violate for 2982 neighbours
+  2325 vertices each violate for 2984 neighbours
+  5270 vertices each violate for 2986 neighbours
+  4650 vertices each violate for 2988 neighbours
+  465 vertices each violate for 2992 neighbours
+  1395 vertices each violate for 2994 neighbours
+  3255 vertices each violate for 2996 neighbours
+  9300 vertices each violate for 2998 neighbours
+  7905 vertices each violate for 3000 neighbours
+  1860 vertices each violate for 3004 neighbours
+  1395 vertices each violate for 3006 neighbours
+  6975 vertices each violate for 3008 neighbours
+  20460 vertices each violate for 3010 neighbours
+  16740 vertices each violate for 3012 neighbours
+  930 vertices each violate for 3016 neighbours
+  2325 vertices each violate for 3018 neighbours
+  7905 vertices each violate for 3020 neighbours
+  15810 vertices each violate for 3022 neighbours
+  14880 vertices each violate for 3024 neighbours
+  930 vertices each violate for 3028 neighbours
+  2325 vertices each violate for 3030 neighbours
+  2325 vertices each violate for 3032 neighbours
+  9300 vertices each violate for 3034 neighbours
+  11625 vertices each violate for 3036 neighbours
+  465 vertices each violate for 3040 neighbours
+  1395 vertices each violate for 3042 neighbours
+  2325 vertices each violate for 3044 neighbours
+  3720 vertices each violate for 3046 neighbours
+  6975 vertices each violate for 3048 neighbours
+  465 vertices each violate for 3054 neighbours
+  465 vertices each violate for 3056 neighbours
+  465 vertices each violate for 3058 neighbours
+  1891 vertices each violate for 3060 neighbours
+
+x^73 + α^31·x^259: 262777080 violations
+  465 vertices each violate for 2958 neighbours
+  465 vertices each violate for 2960 neighbours
+  465 vertices each violate for 2962 neighbours
+  465 vertices each violate for 2964 neighbours
+  465 vertices each violate for 2970 neighbours
+  930 vertices each violate for 2972 neighbours
+  465 vertices each violate for 2976 neighbours
+  2325 vertices each violate for 2982 neighbours
+  1860 vertices each violate for 2984 neighbours
+  3720 vertices each violate for 2986 neighbours
+  5270 vertices each violate for 2988 neighbours
+  2790 vertices each violate for 2994 neighbours
+  3720 vertices each violate for 2996 neighbours
+  8835 vertices each violate for 2998 neighbours
+  14880 vertices each violate for 3000 neighbours
+  3720 vertices each violate for 3006 neighbours
+  8370 vertices each violate for 3008 neighbours
+  17205 vertices each violate for 3010 neighbours
+  13485 vertices each violate for 3012 neighbours
+  5580 vertices each violate for 3018 neighbours
+  6510 vertices each violate for 3020 neighbours
+  8370 vertices each violate for 3022 neighbours
+  16895 vertices each violate for 3024 neighbours
+  4650 vertices each violate for 3030 neighbours
+  4650 vertices each violate for 3032 neighbours
+  4650 vertices each violate for 3034 neighbours
+  12090 vertices each violate for 3036 neighbours
+  1395 vertices each violate for 3042 neighbours
+  2325 vertices each violate for 3044 neighbours
+  5115 vertices each violate for 3046 neighbours
+  6510 vertices each violate for 3048 neighbours
+  930 vertices each violate for 3054 neighbours
+  465 vertices each violate for 3056 neighbours
+  930 vertices each violate for 3058 neighbours
+  3286 vertices each violate for 3060 neighbours
+
+
+n = 11
+x^7: 2127586296 violations
+  698027 vertices each violate for 6096 neighbours
+
+x^21: 2127586296 violations
+  698027 vertices each violate for 6096 neighbours
+
+x^67: 2127586296 violations
+  698027 vertices each violate for 6096 neighbours
+
+x^73: 2127586296 violations
+  698027 vertices each violate for 6096 neighbours
+
+x^137: 2127586296 violations
+  698027 vertices each violate for 6096 neighbours
+
+
+n = 12
+x^7: 17087738850 violations
+  4095 vertices each violate for 11940 neighbours
+  49140 vertices each violate for 11976 neighbours
+  49140 vertices each violate for 11988 neighbours
+  147420 vertices each violate for 12000 neighbours
+  49140 vertices each violate for 12012 neighbours
+  25935 vertices each violate for 12084 neighbours
+  8190 vertices each violate for 12108 neighbours
+  49140 vertices each violate for 12120 neighbours
+  122850 vertices each violate for 12132 neighbours
+  196560 vertices each violate for 12144 neighbours
+  49140 vertices each violate for 12152 neighbours
+  135135 vertices each violate for 12156 neighbours
+  49140 vertices each violate for 12164 neighbours
+  24570 vertices each violate for 12188 neighbours
+  49140 vertices each violate for 12192 neighbours
+  196560 vertices each violate for 12200 neighbours
+  393120 vertices each violate for 12212 neighbours
+  147420 vertices each violate for 12224 neighbours
+  147420 vertices each violate for 12236 neighbours
+  49140 vertices each violate for 12264 neighbours
+  24570 vertices each violate for 12300 neighbours
+  98280 vertices each violate for 12312 neighbours
+  221130 vertices each violate for 12324 neighbours
+  49140 vertices each violate for 12336 neighbours
+  49140 vertices each violate for 12360 neighbours
+  49140 vertices each violate for 12444 neighbours
+  16380 vertices each violate for 12456 neighbours
+  98280 vertices each violate for 12468 neighbours
+  147420 vertices each violate for 12480 neighbours
+  98280 vertices each violate for 12504 neighbours
+
+x^133: 17087738850 violations
+  4095 vertices each violate for 11940 neighbours
+  24570 vertices each violate for 11964 neighbours
+  49140 vertices each violate for 11976 neighbours
+  98280 vertices each violate for 11988 neighbours
+  98280 vertices each violate for 12000 neighbours
+  49140 vertices each violate for 12032 neighbours
+  49140 vertices each violate for 12056 neighbours
+  49140 vertices each violate for 12064 neighbours
+  49140 vertices each violate for 12068 neighbours
+  49140 vertices each violate for 12076 neighbours
+  49140 vertices each violate for 12080 neighbours
+  1365 vertices each violate for 12084 neighbours
+  57330 vertices each violate for 12108 neighbours
+  73710 vertices each violate for 12132 neighbours
+  49140 vertices each violate for 12144 neighbours
+  135135 vertices each violate for 12156 neighbours
+  49140 vertices each violate for 12168 neighbours
+  49140 vertices each violate for 12180 neighbours
+  24570 vertices each violate for 12188 neighbours
+  98280 vertices each violate for 12200 neighbours
+  98280 vertices each violate for 12212 neighbours
+  147420 vertices each violate for 12224 neighbours
+  49140 vertices each violate for 12236 neighbours
+  98280 vertices each violate for 12264 neighbours
+  49140 vertices each violate for 12268 neighbours
+  49140 vertices each violate for 12276 neighbours
+  49140 vertices each violate for 12300 neighbours
+  196560 vertices each violate for 12312 neighbours
+  417690 vertices each violate for 12324 neighbours
+  98280 vertices each violate for 12336 neighbours
+  196560 vertices each violate for 12368 neighbours
+  49140 vertices each violate for 12404 neighbours
+  24570 vertices each violate for 12420 neighbours
+  16380 vertices each violate for 12456 neighbours
+  49140 vertices each violate for 12468 neighbours
+  49140 vertices each violate for 12480 neighbours
+  49140 vertices each violate for 12528 neighbours
+
+
+n = 13
+x^7: 137120288760 violations
+  11180715 vertices each violate for 24528 neighbours
+
+x^21: 137120288760 violations
+  11180715 vertices each violate for 24528 neighbours
+
+x^73: 137120288760 violations
+  11180715 vertices each violate for 24528 neighbours
+
+x^131: 137120288760 violations
+  11180715 vertices each violate for 24528 neighbours
+
+x^265: 137120288760 violations
+  11180715 vertices each violate for 24528 neighbours
+
+x^273: 137120288760 violations
+  11180715 vertices each violate for 24528 neighbours
+
