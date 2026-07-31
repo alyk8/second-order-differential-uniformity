@@ -7,10 +7,9 @@ import os
 import csv
 
 @njit
-def calculate_invertibles(n): # gets all invertible matrices in GF(2^n)
+def calculate_invertibles(n, N): # gets all invertible matrices in GF(2^n)
     invertibles = np.zeros(shape=(31*30*28*24*16, n), dtype=np.uint8) # hardcoded matrix allocation size for n=5
     count = 0
-    N = 2**n
     M = np.zeros(n, dtype=np.int64)
     
     for c1 in range(1, N):
@@ -27,26 +26,10 @@ def calculate_invertibles(n): # gets all invertible matrices in GF(2^n)
                                 for c5 in range(1, N):
                                     M[4] = c5
                                     if get_rank(n, 5, M) == 5:
-                                        invertibles[count, 0] = c1
-                                        invertibles[count, 1] = c2
-                                        invertibles[count, 2] = c3
-                                        invertibles[count, 3] = c4
-                                        invertibles[count, 4] = c5
+                                        invertibles[count] = M.copy()
                                         count += 1
 
     return count, invertibles
-
-@njit
-def get_cubic_coeffs(n, m): # gets all cubic indicies
-    cubic_coeffs = np.zeros(m, dtype=np.uint64)
-    count = 0
-    for i in range(n):
-        for j in range(i+1, n):
-            for k in range(j+1, n):
-                cubic_coeffs[count] = 2**i + 2**j + 2**k
-                count += 1
-
-    return cubic_coeffs
 
 def get_functions(n, m): # gets all optimal functions in GF(2^n) into an array
     with open('search/optimal.csv', 'r') as f:
@@ -72,19 +55,17 @@ def pack_func(m, func): # converts a function to a 64-bit integer
     return res
 
 @njit
-def get_tt(n, m, cubic_coeffs, coeffs): # returns the 1D truth table of coeffs where each entry is a bit-packed integer
-    N = 2**n
+def get_tt(n, N, m, cubic_indices, coeffs): # returns the 1D truth table of coeffs where each entry is a bit-packed integer
     tt1 = np.zeros(N, dtype=np.uint64)
     for x in range(N):
         for c in range(m): # cubic coefficients only
-            if (x & cubic_coeffs[c]) == cubic_coeffs[c]:
+            if (x & cubic_indices[c]) == cubic_indices[c]:
                 tt1[x] ^= coeffs[c]
 
     return tt1
 
 @njit
-def get_g(n, m, cubic_coeffs, inv, tt1, funcs_packed, active_mask, high): # multiplies a function from its truth table by an invertible matrix
-    N = 2**n
+def get_g(n, N, m, cubic_indices, inv, tt1, funcs_packed, active_mask, high): # multiplies a function from its truth table by an invertible matrix
     tt2 = np.zeros(N, dtype=np.uint64) # truth table of L_2 (i.e. inv)
 
     # multiplies the input vector 'x' by the matrix 'inv'
@@ -110,7 +91,7 @@ def get_g(n, m, cubic_coeffs, inv, tt1, funcs_packed, active_mask, high): # mult
     # extracts coeffs and maps to canonical form
     coeffs = np.zeros(m, dtype=np.uint64)
     for i in range(m):
-        coeffs[i] = anf[cubic_coeffs[i]]
+        coeffs[i] = anf[cubic_indices[i]]
 
     g_prime = get_canonical_form(n, m, coeffs)
     g_prime_packed = pack_func(m, g_prime)
@@ -132,10 +113,11 @@ def get_g(n, m, cubic_coeffs, inv, tt1, funcs_packed, active_mask, high): # mult
     return 0
 
 def main(n):
+    N = 2**n
     m = int((n*(n-1)*(n-2))/6) # number of coeffs, i.e. nC3
     
-    count_inv, invertibles = calculate_invertibles(n)
-    cubic_coeffs = get_cubic_coeffs(n, m)
+    count_inv, invertibles = calculate_invertibles(n, N)
+    cubic_indices = get_cubic_indices(n, m)
 
     total_func, funcs = get_functions(n, m)
     funcs_packed = np.array([pack_func(m, f) for f in funcs], dtype=np.uint64) # converts all functions into integers
@@ -152,17 +134,17 @@ def main(n):
                 func = funcs[idx]
                 break
 
-        tt1 = get_tt(n, m, cubic_coeffs, func) # gets truth table of coeffs
+        tt1 = get_tt(n, N, m, cubic_indices, func) # gets truth table of coeffs
 
         print('\nChecking function', func)
-        with tqdm.tqdm(total=total_func, initial=count_func, desc='Remaining Functions') as pbarFunc:
-            with tqdm.tqdm(total=count_inv, desc='Applying invertibles') as pbarInv:
+        with tqdm.tqdm(total=total_func, initial=count_func, desc='Remaining Functions') as pbar_func:
+            with tqdm.tqdm(total=count_inv, desc='Applying invertibles') as pbar_inv:
                 for k in range(count_inv):
-                    num = get_g(n, m, cubic_coeffs, invertibles[k], tt1, funcs_packed, active_mask, total_func-1)
+                    num = get_g(n, N, m, cubic_indices, invertibles[k], tt1, funcs_packed, active_mask, total_func-1)
                     if num == 1:
                         count_func += 1
-                        pbarFunc.update()
-                    pbarInv.update()
+                        pbar_func.update()
+                    pbar_inv.update()
 
         if not os.path.exists('optimal' + str(n) + '.csv'): # writes headers if file does not exist
             with open('optimal' + str(n) + '.csv', 'a', newline='') as f:

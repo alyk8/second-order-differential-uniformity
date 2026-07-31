@@ -73,13 +73,7 @@ def main(n):
     poly = get_primitive_int(n)
     exp_t, log_t = generate_gf_tables(N, MOD, poly)
     
-    cubic_indices = [] # pre-computes these
-    for i in range(n):
-        for j in range(i+1, n):
-            for k in range(j+1, n):
-                cubic_indices.append((1<<i) | (1<<j) | (1<<k))
-    cubic_indices = np.array(cubic_indices, dtype=np.int64)
-
+    cubic_indices = get_cubic_indices(n, m)
     exps = get_exponents(n, MOD)
     
     for d in exps:

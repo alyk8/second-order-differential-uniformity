@@ -248,3 +248,15 @@ def get_canonical_form(n, m, coeffs): # transforms the cubic ANF coefficients in
         gPrime[j] = new_v
         
     return gPrime
+
+@njit
+def get_cubic_indices(n, m): # gets all cubic indicies
+    cubic_indices = np.zeros(m, dtype=np.uint64)
+    count = 0
+    for i in range(n):
+        for j in range(i+1, n):
+            for k in range(j+1, n):
+                cubic_indices[count] = 2**i + 2**j + 2**k
+                count += 1
+
+    return cubic_indices
