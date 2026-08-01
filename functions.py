@@ -1,11 +1,15 @@
 import numpy as np
 from numba import njit
 
-def get_primitive_int(n): # gets the integer rep of the primitive polynomial for GF(2^n) up to n=15
+def get_primitive_int(n): # gets the integer rep of the primitive polynomial for GF(2^n) up to n=32
     polys = {
         2: 0x7, 3: 0xB, 4: 0x13, 5: 0x25, 6: 0x43, 7: 0x83, 
         8: 0x11D, 9: 0x211, 10: 0x409, 11: 0x805, 12: 0x1053, 
-        13: 0x201B, 14: 0x4443, 15: 0x8003
+        13: 0x201B, 14: 0x4443, 15: 0x8003, 16: 0x103DD, 
+        17: 0x20009, 18: 0x4003F, 19: 0x80027, 20: 0x100009, 
+        21: 0x200005, 22: 0x400003, 23: 0x800021, 24: 0x1000087, 
+        25: 0x2000009, 26: 0x4000047, 27: 0x8000027, 28: 0x10000009, 
+        29: 0x20000005, 30: 0x40800007, 31: 0x80000009, 32: 0x100400007
     }
     return polys[n]
 
