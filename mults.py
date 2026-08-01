@@ -8,43 +8,18 @@ import os
 import csv
 
 @njit
-def calculate_mult(n, coeffs): # calculates multiplicities by mapping 2D subspaces to their kernels and counting the collisions
+def calculate_mult(n, func): # calculates multiplicities by mapping 2D subspaces to their kernels and counting the collisions
     kernel_counts = Dict.empty(key_type=types.uint64, value_type=types.int64)
+    M = np.zeros(n, dtype=np.int64) # allocates one time
     count = 0
 
     # iterates through every possible 2D subspace defined by basis vectors (a, b)
     for a in range(1, 1 << n):
-        for ab in range(a + 1, 1 << n):
+        for ab in range(a+1, 1 << n):
             b = a ^ ab
             if ab < b: # ensures we only process each unique {a, b, a^b} set exactly once
                 count += 1
-                M = np.zeros(n, dtype=np.int64)
-                c = 0
-                
-                # builds the matrix M for the 2D subspace
-                for i in range(n):
-                    ai = (a >> i) & 1
-                    bi = (b >> i) & 1
-                    for j in range(i + 1, n):
-                        aj = (a >> j) & 1
-                        bj = (b >> j) & 1
-                        for k in range(j + 1, n):
-                            ak = (a >> k) & 1
-                            bk = (b >> k) & 1
-
-                            # calculates the derivative terms
-                            term_a = (aj & bk) ^ (ak & bj)
-                            term_b = (ai & bk) ^ (ak & bi)
-                            term_c = (ai & bj) ^ (aj & bi)
-
-                            # if a term is 1, XOR the corresponding cubic coefficient into M
-                            if term_a:
-                                M[i] ^= coeffs[c]
-                            if term_b:
-                                M[j] ^= coeffs[c]
-                            if term_c:
-                                M[k] ^= coeffs[c]
-                            c += 1
+                build_M(n, a, b, M, func) # builds the matrix M for the 2D subspace
 
                 # finds the kernel and counts the no. of collisions
                 K = get_kernel_basis(n, M)

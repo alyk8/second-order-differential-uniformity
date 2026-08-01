@@ -260,3 +260,35 @@ def get_cubic_indices(n, m): # gets all cubic indicies
                 count += 1
 
     return cubic_indices
+
+@njit
+def build_M(n, a, b, M, func): # builds the matrix M for the 2D subspace
+    c = 0 # coefficient no.
+    
+    for i in range(n):
+        M[i] = 0
+
+    # builds the matrix M for the 2D subspace
+    for i in range(n): 
+        ai = (a >> i) & 1
+        bi = (b >> i) & 1
+        for j in range(i+1, n):
+            aj = (a >> j) & 1
+            bj = (b >> j) & 1
+            for k in range(j+1, n):
+                ak = (a >> k) & 1
+                bk = (b >> k) & 1
+
+                # calculates the derivative terms
+                term_a = (aj & bk) ^ (ak & bj)
+                term_b = (ai & bk) ^ (ak & bi)
+                term_c = (ai & bj) ^ (aj & bi)
+
+                # if a term is 1, XOR the corresponding cubic coefficient into M
+                if term_a:
+                    M[i] ^= func[c]
+                if term_b:
+                    M[j] ^= func[c]
+                if term_c:
+                    M[k] ^= func[c]
+                c += 1
