@@ -163,5 +163,5 @@ if __name__ == "__main__":
     try:
         n = int(n) # ensures that n is an integer
         main(n)
-    except ValueError:
-        print('Error - n must be an integer')
+    except Exception as e:
+            print(f'Error - n must be an integer: {e}')

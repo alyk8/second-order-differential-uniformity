@@ -238,5 +238,5 @@ if __name__ == "__main__":
             with open('grassmann.txt', 'a', encoding='utf-8') as f: # utf-8 ensures alpha can be written to the textfile
                 for n in range(min, max+1):
                     main(n, f, min)
-    except:
-        print('Error - min and max must be integers')
+    except Exception as e:
+        print(f'Error - min and max must be integers: {e}')

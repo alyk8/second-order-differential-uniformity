@@ -108,5 +108,5 @@ if __name__ == "__main__":
         
             for n in range(min, max+1): # fields to check
                 main(n)
-    except:
-        print('Error - min and max must be integers')
+    except Exception as e:
+            print(f'Error - min and max must be integers: {e}')
