@@ -1,3 +1,7 @@
 __pycache__/functions.cpython-314.pyc
 optimal_sums.csv
 optimal_sums_2.py
+infinite.py
+.gitignore
+optimal_infinites.csv
+infinites_mults.csv
