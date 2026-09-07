@@ -23,51 +23,6 @@ def get_new_ivalues(r, n): # gets possible i values for a given r = gcd(d_2-d_1,
     return reps
 
 @njit
-def get_uniformity(N, MOD, d1, d2, i, exp_table, log_table, spaces): # calculates delta^2 of f(x) = x^d1 + a^i x^d2
-    sbox = np.empty(N, dtype=np.int32)
-    sbox[0] = 0
-    for x in range(1, N):
-        idx = log_table[x]
-        sbox[x] = exp_table[(idx*d1) % MOD] ^ exp_table[(idx*d2 + i) % MOD]
-
-    delta2 = np.int32(0)
-    dddt = np.zeros(N, dtype=np.int32)
-    for space in spaces:
-        a = space[0]
-        b = space[1]
-        ab = space[2]
-        for k in range(N):
-            dddt[k] = 0
-        for x in range(N):
-            c = sbox[x] ^ sbox[x^a] ^ sbox[x^b] ^ sbox[x^ab]
-            dddt[c] += 1
-        current_max = np.max(dddt)
-        if current_max > delta2:
-            delta2 = current_max
-
-    return delta2
-
-@njit
-def get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table, spaces): # calculates if f(x) = x^d1 + a^i x^d2 has optimal delta^2
-    sbox = np.empty(N, dtype=np.int32)
-    sbox[0] = 0
-    for x in range(1, N):
-        idx = log_table[x]
-        sbox[x] = exp_table[(idx*d1) % MOD] ^ exp_table[(idx*d2 + i) % MOD]
-
-    dddt = np.zeros(N, dtype=np.int32)
-    for space in spaces:
-        for k in range(N):
-            dddt[k] = 0
-        for x in range(N):
-            c = sbox[x] ^ sbox[x^space[0]] ^ sbox[x^space[1]] ^ sbox[x^space[2]]
-            dddt[c] += 1
-            if dddt[c] > 4:
-                return 0
-    
-    return 4
-
-@njit
 def build_pairs(exps_d, exps_rot, orbit_ids, MOD, r_counts): # gets all valid (d1, d2) pairs to test
     no_of_exps = len(exps_d)
 
@@ -147,6 +102,74 @@ def get_exponents(n, N, MOD): # gets all unique exponent values for d_1 and d_2
     
     return build_pairs(exps_d, exps_rot, orbit_ids, MOD, r_counts)
 
+@njit
+def get_uniformity(N, MOD, d1, d2, i, exp_table, log_table, spaces): # calculates delta^2 of f(x) = x^d1 + a^i x^d2
+    sbox = np.empty(N, dtype=np.int32)
+    sbox[0] = 0
+    for x in range(1, N):
+        idx = log_table[x]
+        sbox[x] = exp_table[(idx*d1) % MOD] ^ exp_table[(idx*d2 + i) % MOD]
+
+    delta2 = np.int32(0)
+    dddt = np.zeros(N, dtype=np.int32)
+    for space in spaces:
+        a = space[0]
+        b = space[1]
+        ab = space[2]
+        for k in range(N):
+            dddt[k] = 0
+        for x in range(N):
+            c = sbox[x] ^ sbox[x^a] ^ sbox[x^b] ^ sbox[x^ab]
+            dddt[c] += 1
+        current_max = np.max(dddt)
+        if current_max > delta2:
+            delta2 = current_max
+
+    return delta2
+
+@njit
+def get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table, spaces): # calculates if f(x) = x^d1 + a^i x^d2 has optimal delta^2
+    sbox = np.empty(N, dtype=np.int32)
+    sbox[0] = 0
+    for x in range(1, N):
+        idx = log_table[x]
+        sbox[x] = exp_table[(idx*d1) % MOD] ^ exp_table[(idx*d2 + i) % MOD]
+
+    dddt = np.zeros(N, dtype=np.int32)
+    for space in spaces:
+        for k in range(N):
+            dddt[k] = 0
+        for x in range(N):
+            c = sbox[x] ^ sbox[x^space[0]] ^ sbox[x^space[1]] ^ sbox[x^space[2]]
+            dddt[c] += 1
+            if dddt[c] > 4:
+                return 0
+    
+    return 4
+
+@njit
+def get_uniformity_part2(N, MOD, d1, d2, i, exp_table, log_table): # calculates if f(x) = x^d1 + a^i x^d2 has optimal delta^2
+    sbox = np.empty(N, dtype=np.int32)
+    sbox[0] = 0
+    for x in range(1, N):
+        idx = log_table[x]
+        sbox[x] = exp_table[(idx*d1) % MOD] ^ exp_table[(idx*d2 + i) % MOD]
+
+    dddt = np.zeros(N, dtype=np.int32)
+    for a in range(1, N):
+        for b in range(a+1, N):
+            ab = a ^ b
+            if b < ab: 
+                for k in range(N):
+                    dddt[k] = 0
+                for x in range(N):
+                    c = sbox[x] ^ sbox[x^a] ^ sbox[x^b] ^ sbox[x^ab]
+                    dddt[c] += 1
+                    if dddt[c] > 4:
+                        return 0
+    
+    return 4
+
 def main(n, mode):
     N = 2**n
     MOD = N-1
@@ -178,7 +201,8 @@ def main(n, mode):
                     with open(str(n) + ' (sums).csv', 'a', newline='') as f:
                         csv.writer(f).writerow([d1, d2, i, delta2])
                 else: # part mode, i.e. optimals only
-                    delta2 = get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table, spaces)
+                    #delta2 = get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table, spaces)
+                    delta2 = get_uniformity_part2(N, MOD, d1, d2, i, exp_table, log_table)
                 
                 if delta2 == 4: # if function is optimal, saves in textfile
                     with open('optimal_sums.csv', 'a', newline='') as f:
