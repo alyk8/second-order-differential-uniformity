@@ -103,15 +103,16 @@ def get_exponents(n, MOD): # returns the known optimal exponent configurations [
     elif n == 8:
         exps.append([37, -1, 0])
         exps.append([19, 13*(2**3) % MOD, 1])
+        exps.append([13, 19*(2**5) % MOD, 1])
     elif n == 9:
         exps.append([21, -1, 0])
         exps.append([35, -1, 0])
     elif n == 10:
         exps.append([73, -1, 0])
-        exps.append([7, 25*(2**2) % MOD, 31])
         exps.append([7, 19*(2**6) % MOD, 31])
-        exps.append([73, 11*(2**5) % MOD, 31])
+        exps.append([7, 25*(2**2) % MOD, 31])
         exps.append([73, 13*(2**8) % MOD, 31])
+        exps.append([73, 11*(2**5) % MOD, 31])
     elif n == 11:
         exps.append([21, -1, 0])
         exps.append([67, -1, 0])
@@ -126,12 +127,13 @@ def get_exponents(n, MOD): # returns the known optimal exponent configurations [
         exps.append([265, -1, 0])
         exps.append([273, -1, 0])
     elif n == 14:
-        #exps.append([73, -1, 0])
-        #exps.append([529, -1, 0])
+        exps.append([73, -1, 0])
+        exps.append([529, -1, 0])
         exps.append([7, 67*(2**8) % MOD, 127])
         exps.append([7, 97*(2**2) % MOD, 127])
-        exps.append([73, 19*(2**8) % MOD, 127])
         exps.append([73, 25*(2**10) % MOD, 127])
+        exps.append([73, 19*(2**6) % MOD, 127])
+        exps.append([529, 37*(2**2) % MOD, 127])
         exps.append([529, 41*(2**11) % MOD, 127])
     elif n == 15:
         exps.append([21, -1, 0])
