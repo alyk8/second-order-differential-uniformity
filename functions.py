@@ -103,7 +103,6 @@ def get_exponents(n, MOD): # returns the known optimal exponent configurations [
     elif n == 8:
         exps.append([37, -1, 0])
         exps.append([19, 13*(2**3) % MOD, 1])
-        exps.append([13, 19*(2**5) % MOD, 1])
     elif n == 9:
         exps.append([21, -1, 0])
         exps.append([35, -1, 0])
