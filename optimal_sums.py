@@ -32,11 +32,11 @@ def build_pairs(exps_d, exps_rot, orbit_ids, MOD, r_counts): # gets all valid (d
     for k in range(no_of_exps):
         if exps_rot[k] == 0: # forces d1 to be the base element of its cyclotomic coset
             d1 = exps_d[k]
-            for j in range(k+1, no_of_exps): # ensures d2 > d1
+            for j in range(no_of_exps): # ensures d2 > d1
                 d2 = exps_d[j]
                 
                 if orbit_ids[d2-1] != d1: # ensures d1 and d2 do not belong to the same cyclotomic coset
-                    r = math.gcd(int(d2) - int(d1), int(MOD)) # the GCD determines how many i values to test
+                    r = math.gcd(abs(int(d2) - int(d1)), int(MOD)) # the GCD determines how many i values to test
                     i_count += r_counts[r]
                     pair_count += 1
 
@@ -46,7 +46,7 @@ def build_pairs(exps_d, exps_rot, orbit_ids, MOD, r_counts): # gets all valid (d
     for k in range(no_of_exps):
         if exps_rot[k] == 0:
             d1 = exps_d[k]
-            for j in range(k+1, no_of_exps):
+            for j in range(no_of_exps):
                 d2 = exps_d[j]
                 
                 if orbit_ids[d2-1] != d1:
