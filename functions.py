@@ -13,7 +13,7 @@ def get_primitive_int(n): # gets the integer rep of the primitive polynomial for
     }
     return polys[n]
 
-@njit
+@njit(cache=True)
 def generate_gf_tables(N, MOD, poly): # generates the exponential and logarithm lookup tables for fast galois field arithmetic
     exp_table = np.zeros(N, dtype=np.int64)
     log_table = np.zeros(N, dtype=np.int64)
