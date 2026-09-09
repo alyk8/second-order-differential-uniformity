@@ -6,6 +6,8 @@ import tqdm # for progress bar
 import csv
 import os # to check if csv files already exist
 import math
+import multiprocessing
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 def get_new_ivalues(r, n): # gets possible i values for a given r = gcd(d_2-d_1, 2^n-1) and n
     if r <= 1:
@@ -22,7 +24,7 @@ def get_new_ivalues(r, n): # gets possible i values for a given r = gcd(d_2-d_1,
     
     return reps
 
-@njit
+@njit(cache=True)
 def build_pairs(exps_d, exps_rot, orbit_ids, MOD, r_counts): # gets all valid (d1, d2) pairs to test
     no_of_exps = len(exps_d)
 
@@ -36,7 +38,7 @@ def build_pairs(exps_d, exps_rot, orbit_ids, MOD, r_counts): # gets all valid (d
                 d2 = exps_d[j]
                 
                 if orbit_ids[d2-1] != d1: # ensures d1 and d2 do not belong to the same cyclotomic coset
-                    r = math.gcd(abs(int(d2) - int(d1)), int(MOD)) # the GCD determines how many i values to test
+                    r = math.gcd(int(d2) - int(d1), int(MOD)) # the GCD determines how many i values to test
                     i_count += r_counts[r]
                     pair_count += 1
 
@@ -102,7 +104,7 @@ def get_exponents(n, N, MOD): # gets all unique exponent values for d_1 and d_2
     
     return build_pairs(exps_d, exps_rot, orbit_ids, MOD, r_counts)
 
-@njit
+@njit(cache=True, nogil=True)
 def get_uniformity(N, MOD, d1, d2, i, exp_table, log_table): # calculates delta^2 of f(x) = x^d1 + a^i x^d2
     sbox = np.empty(N, dtype=np.int32)
     sbox[0] = 0
@@ -127,7 +129,7 @@ def get_uniformity(N, MOD, d1, d2, i, exp_table, log_table): # calculates delta^
 
     return delta2
 
-@njit
+@njit(cache=True, nogil=True)
 def get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table): # calculates if f(x) = x^d1 + a^i x^d2 has optimal delta^2
     sbox = np.empty(N, dtype=np.int32)
     sbox[0] = 0
@@ -150,6 +152,23 @@ def get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table): # calculates i
     
     return 4
 
+def worker_chunk(args): # multiprocessing function
+    n, N, MOD, chunk_ds, exp_table, log_table, mode = args
+    results = []
+    for d in chunk_ds:
+        d1, d2 = d[0], d[1]
+        r = math.gcd(d2-d1, MOD)
+        iValues = get_new_ivalues(r, n)
+
+        for i in iValues:
+            if mode == 'A': # all mode
+                delta2 = get_uniformity(N, MOD, d1, d2, i, exp_table, log_table)
+            else: # part mode, i.e. optimals only
+                delta2 = get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table)
+            results.append((d1, d2, i, delta2))
+
+    return results
+
 def main(n, mode):
     N = 2**n
     MOD = N-1
@@ -163,29 +182,33 @@ def main(n, mode):
         with open('optimal_sums.csv', 'a', newline='') as f:
             csv.writer(f).writerow(['n', 'd1', 'd2', 'i', 'delta2'])
     
-    if mode == 'A':
-        if not os.path.exists(str(n) + ' (sums).csv'):
-            with open(str(n) + ' (sums).csv', 'a', newline='') as f:
-                csv.writer(f).writerow(['d1', 'd2', 'i', 'delta2'])
-    
-    with tqdm.tqdm(total=count, desc='n = ' + str(n)) as pbar:
-        for d in ds:
-            d1, d2 = d[0], d[1]
-            r = math.gcd(d2-d1, MOD)
-            iValues = get_new_ivalues(r, n)
+    if mode == 'A' and not os.path.exists(str(n) + ' (sums).csv'):
+        with open(str(n) + ' (sums).csv', 'a', newline='') as f:
+            csv.writer(f).writerow(['d1', 'd2', 'i', 'delta2'])
 
-            for i in iValues:
+    # Setup multiprocessing chunks to max out CPU cores
+    cores = multiprocessing.cpu_count()
+    num_chunks = min(len(ds), cores*20) # 20 chunks per core to balance load
+    ds_chunks = np.array_split(ds, num_chunks)
+    tasks = [(n, N, MOD, chunk, exp_table, log_table, mode) for chunk in ds_chunks]
+
+    with ProcessPoolExecutor(max_workers=cores) as executor:
+        futures = [executor.submit(worker_chunk, t) for t in tasks] # submits batches of functions to be processed
+        with tqdm.tqdm(total=count, desc='n = ' + str(n)) as pbar:
+            for future in as_completed(futures): # as batches of functions are processed
+                chunk_results = future.result() # gets diff uniformity of functions
+
                 if mode == 'A': # all mode
-                    delta2 = get_uniformity(N, MOD, d1, d2, i, exp_table, log_table)
                     with open(str(n) + ' (sums).csv', 'a', newline='') as f:
-                        csv.writer(f).writerow([d1, d2, i, delta2])
-                else: # part mode, i.e. optimals only
-                    delta2 = get_uniformity_part(N, MOD, d1, d2, i, exp_table, log_table)
-                
-                if delta2 == 4: # if function is optimal, saves in textfile
+                        csv.writer(f).writerows(chunk_results)
+
+                optimal_results = [r for r in chunk_results if r[3] == 4]
+                if optimal_results:
+                    opt_rows = [[n, r[0], r[1], r[2], r[3]] for r in optimal_results] # also writes n to optimal file
                     with open('optimal_sums.csv', 'a', newline='') as f:
-                        csv.writer(f).writerow([n, d1, d2, i, delta2])
-                pbar.update()
+                        csv.writer(f).writerows(opt_rows)
+
+                pbar.update(len(chunk_results))
 
 if __name__ == "__main__":
     # reads options from config file
@@ -195,18 +218,18 @@ if __name__ == "__main__":
     user_min = config.get('sums', 'min')
     user_max = config.get('sums', 'max')
     mode = config.get('sums', 'mode') # A (all) or P (part)
-
+    
     try:
         # ensures that min and max are integers
-        min = int(user_min)
-        max = int(user_max)
+        min2 = int(user_min)
+        max2 = int(user_max)
 
-        if max < min:
+        if max2 < min2:
             print('Error - max must be greater than min')
         elif mode != 'A' and mode != 'P':
             print('Error - mode must be A (all) or P (part)')
         else:
-            for n in range(min, max+1): # max+1 ensures n=max runs
+            for n in range(min2, max2+1): # max+1 ensures n=max runs
                 print()
                 main(n, mode)
     except Exception as e:
