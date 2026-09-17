@@ -1,8 +1,8 @@
-from functions import *
+from functions import get_rank, build_M
 import numpy as np
 from numba import njit
 from configparser import ConfigParser # to read config file
-import tqdm # for progress bar
+from numba_progress import ProgressBar
 import os
 import csv
 
@@ -76,7 +76,7 @@ def main(n):
     count, funcs = get_functions(n, m) # gets all canonical functions in that field
     diffs = get_ab(N) # gets all (a, b) pairs to check
 
-    with tqdm.tqdm(total=count, desc='n = ' + str(n)) as pbar:
+    with ProgressBar(total=count, desc='n = ' + str(n)) as pbar:
         for func in funcs:
             delta = is_opt(n, func, diffs)
             if delta == 4: # if function is optimal

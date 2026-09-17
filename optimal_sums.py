@@ -1,8 +1,8 @@
-from functions import *
+from functions import get_primitive_int, generate_gf_tables
 from numba import njit # just-in-time compiler
 from configparser import ConfigParser # to read config file
 import numpy as np
-import tqdm # for progress bar
+from numba_progress import ProgressBar # for progress bar
 import csv
 import os # to check if csv files already exist
 import math
@@ -188,13 +188,13 @@ def main(n, mode):
 
     # Setup multiprocessing chunks to max out CPU cores
     cores = multiprocessing.cpu_count()
-    num_chunks = min(len(ds), cores*20) # 20 chunks per core to balance load
+    num_chunks = min(len(ds), cores*(max(1, 10**(n-13)))) # manages number of chunks to balance load
     ds_chunks = np.array_split(ds, num_chunks)
     tasks = [(n, N, MOD, chunk, exp_table, log_table, mode) for chunk in ds_chunks]
 
     with ProcessPoolExecutor(max_workers=cores) as executor:
         futures = [executor.submit(worker_chunk, t) for t in tasks] # submits batches of functions to be processed
-        with tqdm.tqdm(total=count, desc='n = ' + str(n)) as pbar:
+        with ProgressBar(total=count, desc='n = ' + str(n)) as pbar:
             for future in as_completed(futures): # as batches of functions are processed
                 chunk_results = future.result() # gets diff uniformity of functions
 
