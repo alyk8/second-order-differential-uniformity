@@ -1,4 +1,4 @@
-from functions import *
+from functions import get_primitive_int, generate_gf_tables, get_tt, get_anf, get_kernel_basis, get_exponents, get_AB
 import numpy as np
 from numba import njit, prange, types
 from numba.typed import Dict

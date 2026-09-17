@@ -1,4 +1,4 @@
-from functions import *
+from functions import get_primitive_int, generate_gf_tables, get_tt, get_anf, get_kernel_basis, get_exponents, get_canonical_form, get_cubic_indices, build_M
 import numpy as np
 from numba import njit, types
 from numba.typed import Dict
