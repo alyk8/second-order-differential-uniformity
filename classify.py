@@ -1,4 +1,4 @@
-from functions import *
+from functions import get_rank, get_canonical_form, get_cubic_indices
 import numpy as np
 from numba import njit
 from configparser import ConfigParser # to read config file
@@ -164,4 +164,4 @@ if __name__ == "__main__":
         n = int(n) # ensures that n is an integer
         main(n)
     except Exception as e:
-            print(f'Error - n must be an integer: {e}')
+        print(f'Error - n must be an integer: {e}')
