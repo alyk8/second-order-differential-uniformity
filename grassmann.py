@@ -164,7 +164,7 @@ def build_field_context(n, N, MOD): # initialises static data structures for a f
                 cubic_indices.append((1<<i) | (1<<j) | (1<<k))
     cubic_indices = np.array(cubic_indices, dtype=np.uint32)
     
-    count, subspaces = get_AB(N, False) # gets all ab-pairs, including pairs in the same class
+    count, subspaces = get_AB(N) # gets all ab-pairs
     lookup = build_space_lookup(count, subspaces)
     
     return m, exp_t, log_t, cubic_indices, count, subspaces, lookup

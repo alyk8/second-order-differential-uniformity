@@ -142,7 +142,7 @@ def get_exponents(n, MOD): # returns the known optimal exponent configurations [
     return np.array(exps, dtype=np.int64)
 
 @njit
-def get_AB(N, reduced=True): # gets all (a, b) pairs to be checked (reduced mode removes affine equivalence classes)
+def get_AB(N): # gets all (a, b) pairs to be checked
     size = int((N-1)*(N-2)/6) # the no. of pairs
     diffs = np.zeros(shape=(size, 3), dtype=np.uint32) # stores (a, a+b) pairs in vector form
     count = 0
@@ -150,7 +150,7 @@ def get_AB(N, reduced=True): # gets all (a, b) pairs to be checked (reduced mode
     for a in range(1, N): # excludes the zero vector
         seen = np.zeros(N, dtype=np.uint32) # records all of the b's for this specific a
         for ab in range(a+1, N): # a < a^b
-            if (not seen[ab]) or (not reduced): # if we haven't already set b to this a^b
+            if not seen[ab]: # if we haven't already set b to this a^b
                 b = a^ab # a^(a^b) = (a^a)^b = 0^b = b
                 seen[b] = 1
                 if ab < b: # if we haven't already set a to this a^b
