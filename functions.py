@@ -142,23 +142,122 @@ def get_exponents(n, MOD): # returns the known optimal exponent configurations [
     return np.array(exps, dtype=np.int64)
 
 @njit
-def get_AB(N): # gets all (a, b) pairs to be checked
+def get_AB(N): # gets all affine inequivalent (a, b) pairs
     size = int((N-1)*(N-2)/6) # the no. of pairs
     diffs = np.zeros(shape=(size, 3), dtype=np.uint32) # stores (a, a+b) pairs in vector form
     count = 0
 
-    for a in range(1, N): # excludes the zero vector
-        seen = np.zeros(N, dtype=np.uint32) # records all of the b's for this specific a
-        for ab in range(a+1, N): # a < a^b
-            if not seen[ab]: # if we haven't already set b to this a^b
-                b = a^ab # a^(a^b) = (a^a)^b = 0^b = b
-                seen[b] = 1
-                if ab < b: # if we haven't already set a to this a^b
-                    diffs[count, 0] = a
-                    diffs[count, 1] = ab
-                    diffs[count, 2] = b
-                    count += 1
+    for a in range(1, N):
+        for b in range(a+1, N):
+            ab = a ^ b
+            if b < ab: # if we haven't already set a to this a^b
+                diffs[count, 0] = a
+                diffs[count, 1] = b
+                diffs[count, 2] = ab
+                count += 1
     
+    return count, diffs
+
+@njit
+def get_AB_subfield(N, M, exp_table, log_table, MOD): # gets (a, b) pairs, one per orbit when scaled by u in F_{2^M}*
+    # Avoids any O(N^2) memory: every nonzero element lies on one of `step` = (2^n-1)/(2^m-1) = 2^m+1
+    # F_{2^m}-lines (cosets of the subfield). r(x) = log_table[x] % step identifies x's line and is
+    # invariant under subfield scaling, so the element of {a,b,a^b} with smallest r is a scaling-invariant
+    # choice; restricting to the case where that element is ALSO its line's canonical exponent-lift
+    # (log < step) selects exactly one representative per orbit, with no visited/orbit-search structure.
+    # The one gap is subspaces entirely within a single line (all 3 elements share r) - those are handled
+    # separately below by solving the (tiny, size ~sub_size) sub-problem once for line 0 and mapping the
+    # result onto every other line by multiplication.
+    sub_size = 2**M - 1 # size of the subfield F_{2^M}*
+    step = MOD // sub_size # = 2^M + 1, the number of F_{2^M}-lines
+
+    # degenerate case: solve once for line 0 (the embedded subfield itself, a = exp_table[0] = 1)
+    EMB = np.zeros(sub_size, dtype=np.uint32)
+    for k in range(sub_size):
+        EMB[k] = exp_table[k*step]
+
+    deg0_a = np.zeros(sub_size, dtype=np.uint32)
+    deg0_b = np.zeros(sub_size, dtype=np.uint32)
+    deg0_count = 0
+
+    for i in range(sub_size):
+        x = EMB[i]
+        for jx in range(i+1, sub_size):
+            y = EMB[jx]
+            xy = x ^ y
+            if y < xy: # canonical triple within line 0
+                is_min = True # checks minimality under the (small, sub_size) full-line scaling orbit
+                log_x = log_table[x]
+                log_y = log_table[y]
+                for k in range(1, sub_size):
+                    shift = k*step
+                    ux = exp_table[(log_x + shift) % MOD]
+                    uy = exp_table[(log_y + shift) % MOD]
+                    uxy = ux ^ uy
+
+                    lo, mid, hi = ux, uy, uxy
+                    if lo > mid:
+                        lo, mid = mid, lo
+                    if mid > hi:
+                        mid, hi = hi, mid
+                        if lo > mid:
+                            lo, mid = mid, lo
+
+                    if lo < x or (lo == x and mid < y):
+                        is_min = False
+                        break
+                if is_min:
+                    deg0_a[deg0_count] = x
+                    deg0_b[deg0_count] = y
+                    deg0_count += 1
+
+    total = int(((N-1)*(N-2)/6)/(2**M-1))
+    diffs = np.zeros(shape=(total, 3), dtype=np.uint32)
+    count = 0
+
+    # pass 2: fill non-degenerate representatives
+    for j in range(step):
+        a = exp_table[j]
+        for b in range(1, N):
+            if b == a:
+                continue
+            r_b = log_table[b] % step
+            if r_b <= j:
+                continue
+            ab = a ^ b
+            r_ab = log_table[ab] % step
+            if r_ab <= j:
+                continue
+            if b < ab:
+                lo, mid, hi = a, b, ab
+                if lo > mid:
+                    lo, mid = mid, lo
+                if mid > hi:
+                    mid, hi = hi, mid
+                    if lo > mid:
+                        lo, mid = mid, lo
+                diffs[count, 0] = lo
+                diffs[count, 1] = mid
+                diffs[count, 2] = hi
+                count += 1
+
+    # maps line-0's degenerate representatives onto every line by multiplication
+    for j in range(step):
+        a = exp_table[j]
+        for i in range(deg0_count):
+            x0 = deg0_a[i]
+            y0 = deg0_b[i]
+            if j == 0:
+                p, q = x0, y0
+            else:
+                p = exp_table[(j + log_table[x0]) % MOD]
+                q = exp_table[(j + log_table[y0]) % MOD]
+            lo, hi = (p, q) if p < q else (q, p)
+            diffs[count, 0] = lo
+            diffs[count, 1] = hi
+            diffs[count, 2] = lo ^ hi
+            count += 1
+
     return count, diffs
 
 @njit
