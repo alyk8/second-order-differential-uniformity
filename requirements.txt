@@ -1,0 +1,4 @@
+numpy==2.4.4
+numba==0.65.1
+numba-progress==1.2.0
+tqdm==4.67.3
