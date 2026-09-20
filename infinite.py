@@ -10,7 +10,7 @@ import os # to check if csv files already exist
 import multiprocessing
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-def get_uniformity(N, sbox, j, spaces_chunks, cores, count):
+def get_uniformity_multi(N, sbox, j, spaces_chunks, cores, count):
     tasks = [(N, chunk, sbox) for chunk in spaces_chunks]
     with ProcessPoolExecutor(max_workers=cores) as executor: # calculates if f(x) = xTr(ax^[2^j + 2^(2j)]) has optimal delta^2
         futures = [executor.submit(worker_chunk, t) for t in tasks] # submits batches of (a, b)-pairs to be processed
@@ -26,7 +26,7 @@ def get_uniformity(N, sbox, j, spaces_chunks, cores, count):
     return 4
 
 @njit(cache=True, nogil=True)
-def get_uniformity_part(N, M, MOD, sbox, log_table, exp_table, pbar): # calculates if f(x) = x^d1 + a^i x^d2 has optimal delta^2
+def get_uniformity(N, M, MOD, sbox, log_table, exp_table, pbar): # calculates if f(x) = x^d1 + a^i x^d2 has optimal delta^2
     # generates (a, b) pairs the same way as get_AB_subfield (see functions.py for the derivation),
     # checking the DDT immediately for each representative instead of storing it - avoids both the
     # O(N^2) visited array AND materializing the (huge, at n=22) pairs array
@@ -211,12 +211,12 @@ def main(n, multi_processing):
         if math.gcd(j, n) == 1:
             tt = get_tt(N, M, MOD, j, exp_table, log_table) # gets truth table
             if multi_processing:
-                delta2 = get_uniformity(N, tt, j, spaces_chunks, cores, count)
+                delta2 = get_uniformity_multi(N, tt, j, spaces_chunks, cores, count)
             else:
                 with ProgressBar(total=count, desc='j = ' + str(j)) as pbar:
-                    delta2 = get_uniformity_part(N, M, MOD, tt, log_table, exp_table, pbar)
+                    delta2 = get_uniformity(N, M, MOD, tt, log_table, exp_table, pbar)
 
-            if delta2 == 5:
+            if delta2 == 4:
                 mult = calculate_hist(m, tt, cubic_indices)
                 with open('optimal_infinites.csv', 'a', newline='') as f:
                     csv.writer(f).writerow([n, j, mult])
