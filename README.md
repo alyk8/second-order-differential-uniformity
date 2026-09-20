@@ -20,8 +20,7 @@ All scripts read their parameters from [config.ini](config.ini) and are run dire
 
 - **[functions.py](functions.py)** — Shared functions used by other scripts: `GF(2^n)` exponential/logarithm tables from primitive polynomials, truth-table and ANF computation (via the butterfly/Möbius transform), GF(2) linear algebra (Gaussian elimination for rank, inverse and kernel basis), canonical-form reduction of a cubic ANF's coefficients, enumeration of 2-dimensional subspaces (`get_AB`, `get_AB_subfield`), and construction of the coefficient matrix `M` whose kernel encodes a function's second-order derivative on a given subspace.
 
-- **[search.py](search.py)** — Exhaustive search over small fields (`n` = 3–5). Checks every cubic Boolean function up to affine equivalence (in canonical form) and tests each one's second-order
-  differential uniformity directly against every 2D subspace, recording the optimal (`δ² = 4`) functions to `optimal.csv`.
+- **[search.py](search.py)** — Exhaustive search over small fields (`n` = 3–5). Checks every cubic Boolean function up to affine equivalence (in canonical form) and tests each one's second-order differential uniformity directly against every 2D subspace, recording the optimal (`δ² = 4`) functions to `optimal.csv`.
 
 - **[classify.py](classify.py)** — Takes the optimal functions found for `n = 5` by `search.py` and sorts them into affine-equivalence classes, by applying every invertible `5×5` matrix over `GF(2)` to each function and checking (via binary search against the canonical-form list) which other optimal functions it maps to. Used to count the true number of inequivalent optimal functions, written to `optimal5.csv`.
 
